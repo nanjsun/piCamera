@@ -3,22 +3,19 @@ from picamera.array import PiRGBArray
 from picamera import PiCamera
 import time
 import cv2
+import numpy as np
 
 
 def upperThresholdsSlider(x):
-	pass
+    pass
 
 
 def lowerThresholdsSlider(x):
-	pass
-	
-cv2.namedWindow('canny')	
-cv2.createTrackbar('upper', 'canny', 0, 1000, upperThresholdsSlider)
-cv2.createTrackbar('lower', 'canny', 0, 1000, lowerThresholdsSlider)
-
-
-
-
+    pass
+    
+cv2.namedWindow('canny')    
+cv2.createTrackbar('upper', 'canny', 40, 1000, upperThresholdsSlider)
+cv2.createTrackbar('lower', 'canny', 10, 1000, lowerThresholdsSlider)
 
 
 # initialize the camera and grab a reference to the raw camera capture
@@ -28,30 +25,35 @@ camera.framerate = 10
 #camera.hflip = True
 #camera.vflip = True
 rawCapture = PiRGBArray(camera, size=(640, 480))
+
 # allow the camera to warmup
 time.sleep(0.1)
 # capture frames from the camera
 for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
     # grab the raw NumPy array representing the image, then initialize the timestamp
     # and occupied/unoccupied text
-    image = frame.array
-    
+    image = frame.array   
     upper = cv2.getTrackbarPos('upper', 'canny')
-    lower = cv2.getTrackbarPos('lower', 'canny')
-    
+    lower = cv2.getTrackbarPos('lower', 'canny')   
     # show the frame
-    cv2.imshow("Frame", image)
-    
-  #  cannyWithSlider(image)
-    
-    
-    
-    
-    
+    cv2.imshow("Frame", image)   
     canny = cv2.Canny(image, upper, lower)
-    
-    
     cv2.imshow("canny", canny)
+    
+
+    minLineLength = 10
+    maxLineGap = 30
+    lines = cv2.HoughLinesP(canny, 1, np.pi/180, 20, minLineLength, maxLineGap)
+    print(lines)
+    
+    try:
+        if lines.any():
+            for line in lines:
+                for x1, y1, x2, y2 in line:
+                    cv2.line(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
+            cv2.imshow('HoughlinesP', image)
+    except:
+        print("None line found!")
     
     key = cv2.waitKey(1) & 0xFF
     # clear the stream in preparation for the next frame
