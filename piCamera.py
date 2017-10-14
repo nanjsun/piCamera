@@ -8,20 +8,30 @@ import numpy as np
 
 def upperThresholdsSlider(x):
     pass
-
-
 def lowerThresholdsSlider(x):
     pass
     
-cv2.namedWindow('canny')    
+def minLineLengthSlider(x):
+	pass
+def maxLineGapSlider(x):
+	pass    
+    
+    
+cv2.namedWindow('canny')  
+cv2.namedWindow('HoughlinesP')   
 cv2.createTrackbar('upper', 'canny', 40, 1000, upperThresholdsSlider)
 cv2.createTrackbar('lower', 'canny', 10, 1000, lowerThresholdsSlider)
+
+cv2.createTrackbar('minLineLength', 'HoughlinesP', 10, 1000, minLineLengthSlider)
+cv2.createTrackbar('maxLineGap', 'HoughlinesP', 40, 1000, maxLineGapSlider)
+
+
 
 
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
 camera.resolution = (640, 480)
-camera.framerate = 10
+camera.framerate = 2
 #camera.hflip = True
 #camera.vflip = True
 rawCapture = PiRGBArray(camera, size=(640, 480))
@@ -36,13 +46,12 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     upper = cv2.getTrackbarPos('upper', 'canny')
     lower = cv2.getTrackbarPos('lower', 'canny')   
     # show the frame
-    cv2.imshow("Frame", image)   
+  #  cv2.imshow("Frame", image)   
     canny = cv2.Canny(image, upper, lower)
     cv2.imshow("canny", canny)
-    
 
-    minLineLength = 10
-    maxLineGap = 30
+    minLineLength = minLineLength = cv2.getTrackbarPos('minLineLength', 'lines')
+    maxLineGap = maxLineGap = cv2.getTrackbarPos('maxLineGap', 'lines')
     lines = cv2.HoughLinesP(canny, 1, np.pi/180, 20, minLineLength, maxLineGap)
     print(lines)
     
