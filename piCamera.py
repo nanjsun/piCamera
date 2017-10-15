@@ -4,6 +4,7 @@ from picamera import PiCamera
 import time
 import cv2
 import numpy as np
+from findRectangle import findRectangles
 
 
 def upperThresholdsSlider(x):
@@ -12,18 +13,18 @@ def lowerThresholdsSlider(x):
     pass
     
 def minLineLengthSlider(x):
-	pass
+    pass
 def maxLineGapSlider(x):
-	pass    
+    pass    
     
     
 cv2.namedWindow('canny')  
 cv2.namedWindow('HoughlinesP')   
-cv2.createTrackbar('upper', 'canny', 40, 1000, upperThresholdsSlider)
-cv2.createTrackbar('lower', 'canny', 10, 1000, lowerThresholdsSlider)
+cv2.createTrackbar('upper', 'canny', 100, 1000, upperThresholdsSlider)
+cv2.createTrackbar('lower', 'canny', 50, 1000, lowerThresholdsSlider)
 
-cv2.createTrackbar('minLineLength', 'HoughlinesP', 10, 1000, minLineLengthSlider)
-cv2.createTrackbar('maxLineGap', 'HoughlinesP', 40, 1000, maxLineGapSlider)
+cv2.createTrackbar('minLineLength', 'HoughlinesP', 100, 1000, minLineLengthSlider)
+cv2.createTrackbar('maxLineGap', 'HoughlinesP', 400, 1000, maxLineGapSlider)
 
 
 
@@ -31,7 +32,7 @@ cv2.createTrackbar('maxLineGap', 'HoughlinesP', 40, 1000, maxLineGapSlider)
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
 camera.resolution = (640, 480)
-camera.framerate = 2
+camera.framerate = 10
 #camera.hflip = True
 #camera.vflip = True
 rawCapture = PiRGBArray(camera, size=(640, 480))
@@ -39,6 +40,7 @@ rawCapture = PiRGBArray(camera, size=(640, 480))
 # allow the camera to warmup
 time.sleep(0.1)
 # capture frames from the camera
+frameCounter = 0
 for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
     # grab the raw NumPy array representing the image, then initialize the timestamp
     # and occupied/unoccupied text
@@ -49,11 +51,22 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
   #  cv2.imshow("Frame", image)   
     canny = cv2.Canny(image, upper, lower)
     cv2.imshow("canny", canny)
+    
+    frameCounter = frameCounter + 1
+    if frameCounter > 20:
+        findRectangles(canny, image)
+        frameCounter = 0
+    
+
+
+
+
+
 
     minLineLength = minLineLength = cv2.getTrackbarPos('minLineLength', 'lines')
     maxLineGap = maxLineGap = cv2.getTrackbarPos('maxLineGap', 'lines')
     lines = cv2.HoughLinesP(canny, 1, np.pi/180, 20, minLineLength, maxLineGap)
-    print(lines)
+    #print(lines)
     
     try:
         if lines.any():
