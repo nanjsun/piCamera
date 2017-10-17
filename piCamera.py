@@ -33,8 +33,8 @@ cv2.createTrackbar('maxLineGap', 'HoughlinesP', 400, 1000, maxLineGapSlider)
 camera = PiCamera()
 camera.resolution = (640, 480)
 camera.framerate = 10
-#camera.hflip = True
-#camera.vflip = True
+camera.hflip = True
+camera.vflip = True
 rawCapture = PiRGBArray(camera, size=(640, 480))
 
 # allow the camera to warmup
@@ -53,16 +53,10 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     cv2.imshow("canny", canny)
     
     frameCounter = frameCounter + 1
-    if frameCounter > 20:
+    if frameCounter > 10:
         findRectangles(canny, image)
         frameCounter = 0
-    
-
-
-
-
-
-
+        
     minLineLength = minLineLength = cv2.getTrackbarPos('minLineLength', 'lines')
     maxLineGap = maxLineGap = cv2.getTrackbarPos('maxLineGap', 'lines')
     lines = cv2.HoughLinesP(canny, 1, np.pi/180, 20, minLineLength, maxLineGap)
