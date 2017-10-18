@@ -9,11 +9,12 @@ import datetime
 
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
-camera.resolution = (1080, 720)
-camera.framerate = 30
+camera.sensor_mode = 5 # set the sensor_mode to 5, and get the resolution of 1296X730 ,framerate from 1 to 42
+camera.resolution = (1296, 200)
+camera.framerate = 42
 camera.hflip = True
 camera.vflip = True
-rawCapture = PiRGBArray(camera, size=(1080, 720))
+rawCapture = PiRGBArray(camera, size=(1296, 200))
 
 # allow the camera to warmup
 time.sleep(0.1)

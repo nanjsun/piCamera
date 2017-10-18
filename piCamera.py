@@ -31,11 +31,12 @@ cv2.createTrackbar('maxLineGap', 'HoughlinesP', 400, 1000, maxLineGapSlider)
 
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
-camera.resolution = (640, 480)
+camera.sensor_mode = 5
+camera.resolution = (1296, 200)
 camera.framerate = 10
 camera.hflip = True
 camera.vflip = True
-rawCapture = PiRGBArray(camera, size=(640, 480))
+rawCapture = PiRGBArray(camera, size=(1296, 200))
 
 # allow the camera to warmup
 time.sleep(0.1)
