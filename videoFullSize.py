@@ -9,12 +9,14 @@ import datetime
 
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
-camera.sensor_mode = 5 # set the sensor_mode to 5, and get the resolution of 1296X730 ,framerate from 1 to 42
-camera.resolution = (1296, 200)
-camera.framerate = 42
+camera.sensor_mode = 4 # set the sensor_mode to 2, and get the resolution of 1296X730 ,framerate from 1 to 42
+camera.resolution = (1640, 1232)
+#camera.resolution = (2592, 1944)
+camera.framerate = 2
 camera.hflip = True
 camera.vflip = True
-rawCapture = PiRGBArray(camera, size=(1296, 200))
+rawCapture = PiRGBArray(camera, size=(1640, 1232))
+#rawCapture = PiRGBArray(camera, size=(2592, 1944))
 
 # allow the camera to warmup
 time.sleep(0.1)
@@ -42,9 +44,10 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     image = frame.array   
 
     # show the frame
+    cv2.namedWindow("Frame", 0)
+    cv2.resizeWindow("Frame",400, 300) 
+    
     cv2.imshow("Frame", image)   
-    
-    
     key = cv2.waitKey(1) & 0xFF
     
     if key == ord("p"):
