@@ -1,0 +1,30 @@
+import socket
+import json
+
+# class SocketClientOnCamera
+
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+serverAddress = ('localhost', 9899)
+sock.connect(serverAddress)
+print("connect to server success!")
+
+informationFromOpencvToPi = '{"cameraOK":true,"direction":0,"firstDistanceBetweenSpecimenAndIgnitor":0,' \
+                            '"function":"try","ignitorFlameLength":0,"ignitorFlamed":false,' \
+                            '"secondDistanceBetweenSpecimenAndIgnitor":0,"specimenBurnTime":0,' \
+                            '"specimenBurnoffLength":0,"specimenFlameLength":0,"specimenFlamed":false,' \
+                            '"specimenLength":0} '
+parsed_json = json.loads(informationFromOpencvToPi)
+parsed_json['cameraOK'] = False
+
+informationFromOpencvToPi = json.dumps(parsed_json)
+print(informationFromOpencvToPi)
+
+
+sock.sendall(bytes(informationFromOpencvToPi + '\n', encoding="utf-8"))
+print("2")
+szBuf = sock.recv(1024)
+print("3")
+print('recv' + str(szBuf, 'utf-8'))
+sock.close()
+print("end connect")
