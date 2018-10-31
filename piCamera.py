@@ -12,19 +12,19 @@ def upperThresholdsSlider(x):
 def lowerThresholdsSlider(x):
     pass
     
-def minLineLengthSlider(x):
-    pass
-def maxLineGapSlider(x):
-    pass    
+#def minLineLengthSlider(x):
+#    pass
+#def maxLineGapSlider(x):
+#    pass    
     
     
 cv2.namedWindow('canny')  
-cv2.namedWindow('HoughlinesP')   
+#cv2.namedWindow('HoughlinesP')   
 cv2.createTrackbar('upper', 'canny', 100, 1000, upperThresholdsSlider)
 cv2.createTrackbar('lower', 'canny', 50, 1000, lowerThresholdsSlider)
 
-cv2.createTrackbar('minLineLength', 'HoughlinesP', 100, 1000, minLineLengthSlider)
-cv2.createTrackbar('maxLineGap', 'HoughlinesP', 400, 1000, maxLineGapSlider)
+#cv2.createTrackbar('minLineLength', 'HoughlinesP', 100, 1000, minLineLengthSlider)
+#cv2.createTrackbar('maxLineGap', 'HoughlinesP', 400, 1000, maxLineGapSlider)
 
 
 
@@ -63,14 +63,14 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     lines = cv2.HoughLinesP(canny, 1, np.pi/180, 20, minLineLength, maxLineGap)
     #print(lines)
     
-    try:
-        if lines.any():
-            for line in lines:
-                for x1, y1, x2, y2 in line:
-                    cv2.line(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
-            cv2.imshow('HoughlinesP', image)
-    except:
-        print("None line found!")
+#    try:
+#        if lines.any():
+#            for line in lines:
+#                for x1, y1, x2, y2 in line:
+#                    cv2.line(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
+#            cv2.imshow('HoughlinesP', image)
+#    except:
+#        print("None line found!")
     
     key = cv2.waitKey(1) & 0xFF
     # clear the stream in preparation for the next frame
