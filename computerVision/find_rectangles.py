@@ -1,8 +1,10 @@
+import datetime
+
 import cv2
 # import numpy as np
 
 
-def find_rectangles(img, img1):
+def find_rectangles(img, img1, measure_sequence):
 
     image, contours, hier = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
@@ -40,6 +42,11 @@ def find_rectangles(img, img1):
     cv2.putText(img1, 'height:' + str(h) + 'width:' + str(w), (10, 200), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,255,0), 2)
     
     cv2.imshow("rectangle", img1)
+    photo_number = measure_sequence
+    photo_name = '/pi/computerVersion/photos/''specimenLength' + str(datetime.date.today()) + '-' + str(photo_number) + '.jpg'
+
+    cv2.imwrite(photo_name, img1)
+    return h
 
     
 if __name__ == '__main__' :

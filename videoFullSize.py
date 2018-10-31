@@ -57,7 +57,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
         
         cv2.imwrite('/home/pi/piCamera/photos/' + photoName, image)
         print('take photo ok! and save in ' + photoName)
-    
+
     
     if key == ord("v"):
         recordVideo()
